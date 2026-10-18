@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Student {
+private:
+    const int id;
+    string nume;
+    vector<int> note;
+
+public:
+    static int nrStudenti;
+
+    
+    Student() : id(++nrStudenti) {
+        this->nume = "Anonim";
+    }
+
+    
+    Student(int id, string nume, vector<int> note) : id(id) {
+        this->nume = nume;
+        this->note = note;
+        nrStudenti++;
+    }
+
+    float calculeazaMedia() {
+        if (note.empty()) {
+            return 0;
+        }
+
+        float suma = 0;
+        for (int nota : note) {
+            suma += nota;
+        }
+        return suma / note.size();
+    }
+
+    
+    void afisare() {
+        cout << "\nID: " << id << "\n Nume: " << nume;
+        if (!note.empty()) {
+            cout << "\n Note: ";
+            for (int nota : note) {
+                cout << nota << " ";
+            }
+            cout << "\n Media: " << calculeazaMedia();
+        } else {
+            cout << " \n Fara note";
+        }
+        cout << endl;
+    }
+};
+
+
+int Student::nrStudenti = 0;
+
+int main() {
+    
+    vector<int> noteExemplu = {7, 8, 6};
+    Student s1(101, "Popescu Ion", noteExemplu);
+    s1.afisare();
+    
+     noteExemplu = {2, 4,5};
+    Student s2(102, "Grigore Paul", noteExemplu);
+    s2.afisare();
+
+
+    cout  << Student::nrStudenti << endl;
+
+    return 0;
+}

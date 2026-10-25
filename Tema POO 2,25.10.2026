@@ -1,0 +1,132 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class AdapostPisici {
+private:
+	const int id;
+	string nume;
+	int nrPisici;
+	int* vectorVarste; 
+
+public:
+	static int nrAdaposturi;
+
+	
+	AdapostPisici() : id(++nrAdaposturi) {
+		this->nume = "Default";
+		this->nrPisici = 0;
+		this->vectorVarste = nullptr;
+	}
+
+	
+	AdapostPisici(int idNou, string nume, int nrPisici, int* vectorVarste) : id(++nrAdaposturi) {
+		this->nume = nume;
+		this->nrPisici = nrPisici;
+		this->vectorVarste = new int[nrPisici];
+		for (int i = 0; i < this->nrPisici; i++) {
+			this->vectorVarste[i] = vectorVarste[i];
+		}
+	}
+
+	
+	void afisareAdapost() {
+		cout << endl << "Id: " << this->id;
+		cout << endl << "Nume: " << this->nume;
+		cout << endl << "Nr pisici: " << this->nrPisici;
+		if (this->nrPisici > 0) {
+			cout << endl << "Varste pisici (luni): ";
+			for (int i = 0; i < this->nrPisici - 1; i++) {
+				cout << this->vectorVarste[i] << ", ";
+			}
+			cout << this->vectorVarste[this->nrPisici - 1] << ".";
+		}
+	}
+
+	
+	int getNrPisici() {
+		return this->nrPisici;
+	}
+
+	void setNrPisici(int nrPisiciNou) {
+		if (nrPisiciNou >= 0) {
+			this->nrPisici = nrPisiciNou;
+		}
+		else {
+			throw "Valoare negativa";
+		}
+	}
+
+	
+	int* getVectorVarste() {
+		int* vectorNou = new int[this->nrPisici];
+		for (int i = 0; i < this->nrPisici; i++) {
+			vectorNou[i] = this->vectorVarste[i];
+		}
+		return vectorNou;
+	}
+
+	void setVectorVarste(int* vector, int nrP) {
+		setNrPisici(nrP);
+
+		if (this->vectorVarste != nullptr) {
+			delete[] this->vectorVarste;
+		}
+
+		this->vectorVarste = new int[this->nrPisici];
+		for (int i = 0; i < this->nrPisici; i++) {
+			this->vectorVarste[i] = vector[i];
+		}
+
+		delete[] vector;
+	}
+
+
+	~AdapostPisici() {
+		if (this->vectorVarste != nullptr) {
+			delete[] this->vectorVarste;
+		}
+	}
+};
+
+int AdapostPisici::nrAdaposturi = 0;
+
+int main() {
+    
+	int varste1[] = {12, 24, 6};
+    AdapostPisici adapost(1, "KolaKariola", 3, varste1);
+
+    try {
+        adapost.setNrPisici(2);
+    }
+    catch (int cod) {
+        cout << endl << cod;
+    }
+    catch (const char* mesaj) {
+        cout << endl << mesaj;
+    }
+
+    
+    adapost.setVectorVarste(new int[3]{12, 24, 6}, 3);
+
+    int* vector = adapost.getVectorVarste();
+
+
+    delete[] vector;
+
+    cout << endl << "\nPrimul adapost:";
+    adapost.afisareAdapost();
+
+    int varste2[] = {5, 18, 36, 12};
+    AdapostPisici centru(2, "Speranta", 4, varste2);
+
+    cout << endl << "\nAl doilea adapost:";
+    centru.afisareAdapost();
+
+    cout <<"\n"<< AdapostPisici::nrAdaposturi<< " adaposturi";
+
+    return 0;
+	
+    
+}
